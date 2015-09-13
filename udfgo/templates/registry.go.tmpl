@@ -1,0 +1,26 @@
+package main
+
+import (
+	module "{{.ModulePath}}"
+
+	"github.com/GeertJohan/aerospike-udf-go/registry"
+)
+
+{{range .Registrations}}
+var udf{{.Name}} = registry.UDF{
+	Name: "{{.Name}}",
+	Hook: func() error { // TODO: udf.Error ?
+		//++ convert args
+		
+		module.{{.Name}}()
+		
+		//++ convert rets
+	},
+}
+{{end}}
+
+func init() {
+	{{range .Registrations}}
+	registry.Register(udf{{.Name}})
+	{{end}}
+}
